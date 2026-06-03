@@ -13,7 +13,7 @@ public class AlumnoModel {
     private String numControl;
     private String nombre;
     private String primerAp;
-    private String segundAP;
+    private String segundap;
     private String fechaNac;
     private byte semestre;
     private String carrera;
@@ -41,12 +41,14 @@ public class AlumnoModel {
     public void setPrimerAp(String primerAp) {
         this.primerAp = primerAp;
     }
-    public String getSegundAP() {
-        return segundAP;
-    }
-    public void setSegundAP(String segundAP) {
-        this.segundAP = segundAP;
-    }
+
+public String getSegundap() { 
+    return segundap;
+}
+
+public void setSegundap(String segundap) { 
+    this.segundap = segundap;
+}
     public String getFechaNac() {
         return fechaNac;
     }
@@ -66,6 +68,5 @@ public class AlumnoModel {
         this.carrera = carrera;
     }
 
-    //añadir getter setter y constructor 
 
 }

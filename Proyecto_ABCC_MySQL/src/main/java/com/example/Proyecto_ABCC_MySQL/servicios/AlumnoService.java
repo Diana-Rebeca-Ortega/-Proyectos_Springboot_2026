@@ -15,6 +15,9 @@ public class AlumnoService {
         this.alumnoRepository = alumnoRepository;
     }
 
+public AlumnoModel guardar(AlumnoModel alumno) {
+    return alumnoRepository.save(alumno);
+}
     public List<AlumnoModel> findAlumnos(){
         return alumnoRepository.findAll();
     }
