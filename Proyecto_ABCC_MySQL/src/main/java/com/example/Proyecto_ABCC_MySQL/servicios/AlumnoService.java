@@ -14,6 +14,9 @@ public class AlumnoService {
     public AlumnoService(AlumnoRepository alumnoRepository) {
         this.alumnoRepository = alumnoRepository;
     }
+    public void eliminar(Integer id) {
+    alumnoRepository.deleteById(id);
+}
 
 public AlumnoModel guardar(AlumnoModel alumno) {
     return alumnoRepository.save(alumno);

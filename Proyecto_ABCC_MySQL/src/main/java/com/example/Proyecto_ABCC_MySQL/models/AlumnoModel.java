@@ -43,11 +43,10 @@ public class AlumnoModel {
     }
 
 public String getSegundap() { 
-    return segundap;
+    return segundap; 
 }
-
 public void setSegundap(String segundap) { 
-    this.segundap = segundap;
+    this.segundap = segundap; 
 }
     public String getFechaNac() {
         return fechaNac;

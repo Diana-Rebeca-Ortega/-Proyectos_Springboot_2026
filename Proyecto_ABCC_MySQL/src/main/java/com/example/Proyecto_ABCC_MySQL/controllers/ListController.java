@@ -28,7 +28,10 @@ public class ListController {
     public AlumnoModel agregarAlumno(@RequestBody AlumnoModel alumno) {
         return alumnoService.guardar(alumno);
     }
-
+@DeleteMapping("/alumnos/{id}")
+public void eliminar(@PathVariable Integer id) {
+    alumnoService.eliminar(id);
+}
     @PutMapping("/alumnos")
 public AlumnoModel actualizarAlumno(@RequestBody AlumnoModel alumno) {
     return alumnoService.guardar(alumno); // save() en JPA también funciona para actualizar si el ID existe

@@ -35,6 +35,8 @@
             <div class="modal-header"><h5 id="modalTitle">Registrar Alumno</h5></div>
             <div class="modal-body">
                 <form id="form-alumno">
+                    <input type="hidden" id="id">
+                    
                     <input type="text" id="numControl" class="form-control mb-2" placeholder="Num. Control" required>
                     <input type="text" id="nombre" class="form-control mb-2" placeholder="Nombre" required>
                     <input type="text" id="primerAp" class="form-control mb-2" placeholder="Primer Apellido" required>
@@ -59,10 +61,10 @@
         document.getElementById('tabla-alumnos').innerHTML = data.map(a => `
             <tr>
                 <td>${a.numControl}</td><td>${a.nombre}</td><td>${a.primerAp}</td>
-                <td>${a.segundoAp || ''}</td><td>${a.semestre}</td><td>${a.carrera}</td>
+                <td>${a.segundap || ''}</td><td>${a.semestre}</td><td>${a.carrera}</td>
                 <td>
                     <button class="btn btn-warning btn-sm" onclick='editarAlumno(${JSON.stringify(a)})'>Editar</button>
-                    <button class="btn btn-danger btn-sm" onclick="eliminarAlumno('${a.numControl}')">Eliminar</button>
+                    <button class="btn btn-danger btn-sm" onclick="eliminarAlumno(${a.id})">Eliminar</button>
                 </td>
             </tr>
         `).join('');
@@ -71,27 +73,37 @@
     function abrirModal() {
         document.getElementById('modalTitle').innerText = "Registrar Alumno";
         document.getElementById('form-alumno').reset();
+        document.getElementById('id').value = ''; // Limpiamos el ID
         bsModal.show();
     }
 
     function editarAlumno(alumno) {
         document.getElementById('modalTitle').innerText = "Editar Alumno";
+        document.getElementById('id').value = alumno.id; // Asignamos el ID
         document.getElementById('numControl').value = alumno.numControl;
         document.getElementById('nombre').value = alumno.nombre;
         document.getElementById('primerAp').value = alumno.primerAp;
-        document.getElementById('segundoAp').value = alumno.segundoAp || '';
+        document.getElementById('segundoAp').value = alumno.segundap || '';
         document.getElementById('semestre').value = alumno.semestre;
         document.getElementById('carrera').value = alumno.carrera;
         bsModal.show();
     }
 
+    async function eliminarAlumno(id) {
+        if(confirm('¿Seguro que deseas eliminar este registro?')) {
+            await fetch(`/api/alumnos/${id}`, { method: 'DELETE' });
+            cargarAlumnos();
+        }
+    }
+
     document.getElementById('form-alumno').addEventListener('submit', async (e) => {
         e.preventDefault();
         const alumno = {
+            id: document.getElementById('id').value || null,
             numControl: document.getElementById('numControl').value,
             nombre: document.getElementById('nombre').value,
             primerAp: document.getElementById('primerAp').value,
-            segundoAp: document.getElementById('segundoAp').value,
+            segundap: document.getElementById('segundoAp').value,
             semestre: document.getElementById('semestre').value,
             carrera: document.getElementById('carrera').value
         };
