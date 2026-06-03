@@ -1,9 +1,7 @@
 package com.example.Proyecto_ABCC_MySQL.repositories;
 
-import com.example.Proyecto_ABCC_MySQL.models.Actividad;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import com.example.Proyecto_ABCC_MySQL.models.Actividad; 
 
-@Repository
-public interface ActividadRepository extends JpaRepository<Actividad, Long> {
+public interface ActividadRepository extends JpaRepository<Actividad, Integer> {
 }

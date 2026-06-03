@@ -14,7 +14,9 @@ public class ActividadService {
     public List<Actividad> listarTodas() {
         return actividadRepository.findAll();
     }
-
+    public void eliminar(Integer id) {
+        actividadRepository.deleteById(id);
+    }
     public Actividad guardar(Actividad actividad) {
         return actividadRepository.save(actividad);
     }

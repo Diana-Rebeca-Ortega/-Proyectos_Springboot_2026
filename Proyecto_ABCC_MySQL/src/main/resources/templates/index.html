@@ -10,93 +10,60 @@
 <div class="container mt-5">
     <h2 class="text-center text-danger mb-4">Servicios Escolares</h2>
 
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <span>Listado de Alumnos</span>
-            <button class="btn btn-primary" onclick="abrirModal()">AGREGAR</button>
-        </div>
-        <div class="card-body">
-            <input type="text" id="busqueda" class="form-control mb-3" placeholder="🔍 Buscar por nombre, control o carrera..." onkeyup="filtrarTabla()">
-            
-            <table class="table table-bordered table-striped">
-                <thead class="table-light">
-                    <tr>
-                        <th>Num. Control</th><th>Nombre</th><th>Primer Ap.</th><th>Segundo Ap.</th>
-                        <th>Semestre</th><th>Carrera</th><th>Acciones</th>
-                    </tr>
+    <ul class="nav nav-tabs" id="myTab">
+        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#alumnos">Alumnos</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#materias">Materias</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#actividades">Actividades</button></li>
+    </ul>
+
+    <div class="tab-content p-4 bg-white border border-top-0">
+        <div class="tab-pane fade show active" id="alumnos">
+            <table class="table table-striped">
+                <thead>
+                    <tr><th>Control</th><th>Nombre</th><th>Carrera</th><th>Acciones</th></tr>
                 </thead>
-                <tbody id="tabla-alumnos"></tbody>
+                <tbody>
+                    <tr th:each="a : ${listaAlumnos}">
+                        <td th:text="${a.numControl}"></td>
+                        <td th:text="${a.nombre}"></td>
+                        <td th:text="${a.carrera}"></td>
+                        <td>
+                            <button class="btn btn-sm btn-warning">Editar</button>
+                            <button class="btn btn-sm btn-danger">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane fade" id="materias">
+            <table class="table table-striped">
+                <thead><tr><th>ID</th><th>Nombre Materia</th><th>Créditos</th></tr></thead>
+                <tbody>
+                    <tr th:each="m : ${listaMaterias}">
+                        <td th:text="${m.id}"></td>
+                        <td th:text="${m.nombreMateria}"></td>
+                        <td th:text="${m.creditos}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane fade" id="actividades">
+            <table class="table table-striped">
+                <thead><tr><th>ID</th><th>Actividad</th><th>Instructor</th></tr></thead>
+                <tbody>
+                    <tr th:each="act : ${listaActividades}">
+                        <td th:text="${act.id}"></td>
+                        <td th:text="${act.nombreActividad}"></td>
+                        <td th:text="${act.instructor}"></td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="modalAlumno" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header"><h5 id="modalTitle">Registrar Alumno</h5></div>
-            <div class="modal-body">
-                <form id="form-alumno">
-                    <input type="hidden" id="id">
-                    <input type="text" id="numControl" class="form-control mb-2" placeholder="Num. Control" required>
-                    <input type="text" id="nombre" class="form-control mb-2" placeholder="Nombre" required>
-                    <input type="text" id="primerAp" class="form-control mb-2" placeholder="Primer Apellido" required>
-                    <input type="text" id="segundoAp" class="form-control mb-2" placeholder="Segundo Apellido">
-                    <input type="number" id="semestre" class="form-control mb-2" placeholder="Semestre">
-                    <input type="text" id="carrera" class="form-control mb-2" placeholder="Carrera">
-                    <button type="submit" class="btn btn-success w-100">Guardar Alumno</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    const bsModal = new bootstrap.Modal(document.getElementById('modalAlumno'));
-
-    async function cargarAlumnos() {
-        const res = await fetch('/api/alumnos');
-        const data = await res.json();
-        document.getElementById('tabla-alumnos').innerHTML = data.map(a => `
-            <tr>
-                <td>${a.numControl}</td><td>${a.nombre}</td><td>${a.primerAp}</td>
-                <td>${a.segundap || ''}</td><td>${a.semestre}</td><td>${a.carrera}</td>
-                <td>
-                    <button class="btn btn-warning btn-sm" onclick='editarAlumno(${JSON.stringify(a)})'>Editar</button>
-                    <button class="btn btn-danger btn-sm" onclick="eliminarAlumno(${a.id})">Eliminar</button>
-                </td>
-            </tr>
-        `).join('');
-    }
-
-    // ... (Mantén tus funciones filtrarTabla, abrirModal, editarAlumno y eliminarAlumno tal cual estaban)
-    // Nota: Asegúrate que en editarAlumno, el campo que buscas sea 'segundap' para coincidir con tu modelo
-    
-    document.getElementById('form-alumno').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const alumno = {
-            id: document.getElementById('id').value || null,
-            numControl: document.getElementById('numControl').value,
-            nombre: document.getElementById('nombre').value,
-            primerAp: document.getElementById('primerAp').value,
-            segundap: document.getElementById('segundoAp').value, // <-- Asegurado el nombre
-            semestre: document.getElementById('semestre').value,
-            carrera: document.getElementById('carrera').value
-        };
-        
-        const esEdicion = document.getElementById('id').value !== "";
-        await fetch('/api/alumnos', {
-            method: esEdicion ? 'PUT' : 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(alumno)
-        });
-        
-        bsModal.hide();
-        cargarAlumnos();
-    });
-
-    document.addEventListener('DOMContentLoaded', cargarAlumnos);
-</script>
 </body>
 </html>

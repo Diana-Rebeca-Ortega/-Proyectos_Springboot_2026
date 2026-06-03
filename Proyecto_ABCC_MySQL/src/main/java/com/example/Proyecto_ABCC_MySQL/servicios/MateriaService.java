@@ -9,10 +9,17 @@ import java.util.List;
 @Service
 public class MateriaService {
     @Autowired
-    private MateriaRepository materiaRepository;
+    private MateriaRepository repo;
 
     public List<Materia> listarTodas() {
-        return materiaRepository.findAll();
+        return repo.findAll();
     }
-    
+
+    public Materia guardar(Materia m) {
+        return repo.save(m);
+    }
+
+    public void eliminar(Integer id) {
+        repo.deleteById(id);
+    }
 }

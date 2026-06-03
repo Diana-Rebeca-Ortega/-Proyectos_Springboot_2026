@@ -6,15 +6,27 @@ import jakarta.persistence.*;
 public class Actividad {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String descripcion;
-    private int puntos;
+    private Integer id;
+    private String nombreActividad;
+    private String instructor;
+    public Integer getId() {
+        return id;
+    }
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    public String getNombreActividad() {
+        return nombreActividad;
+    }
+    public void setNombreActividad(String nombreActividad) {
+        this.nombreActividad = nombreActividad;
+    }
+    public String getInstructor() {
+        return instructor;
+    }
+    public void setInstructor(String instructor) {
+        this.instructor = instructor;
+    }
 
-    // Getters y Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getDescripcion() { return descripcion; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
-    public int getPuntos() { return puntos; }
-    public void setPuntos(int puntos) { this.puntos = puntos; }
+    
 }
