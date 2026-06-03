@@ -22,4 +22,8 @@ public class MateriaService {
     public void eliminar(Integer id) {
         repo.deleteById(id);
     }
+    // Agrega esto dentro de MateriaService.java
+public Materia obtenerPorId(Integer id) {
+    return repo.findById(id).orElse(null);
+}
 }

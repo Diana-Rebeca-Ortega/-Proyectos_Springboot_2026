@@ -5,3 +5,4 @@ import com.example.Proyecto_ABCC_MySQL.models.Materia;
 
 public interface MateriaRepository extends JpaRepository<Materia, Integer> {
 }
+

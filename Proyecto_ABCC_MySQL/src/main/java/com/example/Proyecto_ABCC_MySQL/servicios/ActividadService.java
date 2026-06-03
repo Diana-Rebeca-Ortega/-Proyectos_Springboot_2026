@@ -20,4 +20,8 @@ public class ActividadService {
     public Actividad guardar(Actividad actividad) {
         return actividadRepository.save(actividad);
     }
+    // Agrega esto en ActividadService.java
+public Actividad obtenerPorId(Integer id) {
+    return actividadRepository.findById(id).orElse(null);
+}
 }

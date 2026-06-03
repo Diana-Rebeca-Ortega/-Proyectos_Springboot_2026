@@ -44,4 +44,42 @@ public class ListController {
 
     @DeleteMapping("/actividades/{id}")
     public void eliminarActividad(@PathVariable Integer id) { actividadService.eliminar(id); }
+    // --- AGREGAR A ListController ---
+
+// Este sirve para el "fetch" que rellena el formulario al editar
+@GetMapping("/alumnos/{id}")
+public AlumnoModel obtenerAlumno(@PathVariable Integer id) {
+    return alumnoService.obtenerPorId(id);
+}
+@PutMapping("/alumnos/{id}")
+public AlumnoModel actualizarAlumno(@PathVariable Integer id, @RequestBody AlumnoModel alumno) {
+    alumno.setId(id); // Asegura que el ID del objeto coincida con el de la URL
+    return alumnoService.guardar(alumno);
+}
+// --- AGREGAR A ListController para Materias ---
+
+// Para precargar el formulario cuando das clic en Editar
+@GetMapping("/materias/{id}")
+public Materia obtenerMateria(@PathVariable Integer id) {
+    return materiaService.obtenerPorId(id);
+}
+
+// Para guardar cambios cuando das clic en Guardar desde el modal
+@PutMapping("/materias/{id}")
+public Materia actualizarMateria(@PathVariable Integer id, @RequestBody Materia materia) {
+    materia.setId(id); // Asegura que el ID se mantenga para el UPDATE
+    return materiaService.guardar(materia);
+}
+// --- AGREGAR A ListController para Actividades ---
+
+@GetMapping("/actividades/{id}")
+public Actividad obtenerActividad(@PathVariable Integer id) {
+    return actividadService.obtenerPorId(id);
+}
+
+@PutMapping("/actividades/{id}")
+public Actividad actualizarActividad(@PathVariable Integer id, @RequestBody Actividad actividad) {
+    actividad.setId(id); // Importante para que JPA haga un UPDATE en lugar de un INSERT
+    return actividadService.guardar(actividad);
+}
 }
