@@ -1,5 +1,5 @@
 # Usar una imagen base de Java
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jdk-jammy
 # Copiar el archivo jar generado a la imagen
 COPY target/*.jar app.jar
 # Exponer el puerto
