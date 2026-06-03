@@ -91,19 +91,18 @@
 </div>
 
 <script>
-    const modal = new bootstrap.Modal(document.getElementById('modalForm'));
+    // Inicialización del modal
+    const modalElement = document.getElementById('modalForm');
+    const modal = new bootstrap.Modal(modalElement);
 
-    function eliminar(entidad, id) {
-        if(confirm('¿Desea borrar permanentemente este registro?')) {
-            fetch('/api/' + entidad + '/' + id, { method: 'DELETE' }).then(() => location.reload());
-        }
-    }
-
+    // Función para abrir el modal (Agregar)
     function abrirModal(tipo, id) {
         document.getElementById('tituloModal').innerText = (id ? 'Editar ' : 'Registrar ') + tipo;
         let html = '';
+        
         if(tipo === 'Alumno') {
-            html = `<input type="text" id="numControl" class="form-control mb-2" placeholder="Num Control">
+            html = `<input type="hidden" id="id" value="${id || ''}">
+                    <input type="text" id="numControl" class="form-control mb-2" placeholder="Num Control">
                     <input type="text" id="nombre" class="form-control mb-2" placeholder="Nombre">
                     <input type="text" id="primerAp" class="form-control mb-2" placeholder="Primer Apellido">
                     <input type="text" id="segundap" class="form-control mb-2" placeholder="Segundo Apellido">
@@ -111,24 +110,54 @@
                     <input type="number" id="semestre" class="form-control mb-2" placeholder="Semestre">
                     <input type="text" id="carrera" class="form-control mb-2" placeholder="Carrera">`;
         } else if(tipo === 'Materia') {
-            html = `<input type="text" id="nombreMateria" class="form-control mb-2" placeholder="Nombre Materia">
+            html = `<input type="hidden" id="id" value="${id || ''}">
+                    <input type="text" id="nombreMateria" class="form-control mb-2" placeholder="Nombre Materia">
                     <input type="number" id="creditos" class="form-control mb-2" placeholder="Créditos">`;
         } else {
-            html = `<input type="text" id="nombreActividad" class="form-control mb-2" placeholder="Nombre Actividad">
+            html = `<input type="hidden" id="id" value="${id || ''}">
+                    <input type="text" id="nombreActividad" class="form-control mb-2" placeholder="Nombre Actividad">
                     <input type="text" id="instructor" class="form-control mb-2" placeholder="Instructor">`;
         }
+        
         document.getElementById('camposDinamicos').innerHTML = html;
+        
+        // Si hay ID, buscamos los datos (opcional: precarga)
+        if(id) {
+            fetch('/api/' + tipo.toLowerCase() + 's/' + id)
+                .then(res => res.json())
+                .then(data => {
+                    for(let key in data) {
+                        let el = document.getElementById(key);
+                        if(el) el.value = data[key];
+                    }
+                });
+        }
         modal.show();
+    }
+
+    // AÑADE ESTA FUNCIÓN QUE TE FALTABA
+    function editar(tipo, id) {
+        abrirModal(tipo, id);
+    }
+
+    function eliminar(entidad, id) {
+        if(confirm('¿Desea borrar permanentemente este registro?')) {
+            fetch('/api/' + entidad + '/' + id, { method: 'DELETE' }).then(() => location.reload());
+        }
     }
 
     document.getElementById('formularioEntidad').addEventListener('submit', function(e) {
         e.preventDefault();
-        const tipo = document.getElementById('tituloModal').innerText.split(' ')[1];
+        const titulo = document.getElementById('tituloModal').innerText;
+        const tipo = titulo.split(' ').pop();
+        const id = document.getElementById('id').value;
         const datos = {};
+        
         this.querySelectorAll('input').forEach(i => { if(i.id) datos[i.id] = i.value; });
         
-        fetch('/api/' + tipo.toLowerCase() + 's', {
-            method: 'POST',
+        // Si hay ID es PUT (actualizar), si no es POST (crear)
+        fetch('/api/' + tipo.toLowerCase() + 's' + (id ? '/' + id : ''), {
+            method: id ? 'PUT' : 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(datos)
         }).then(() => { modal.hide(); location.reload(); });
